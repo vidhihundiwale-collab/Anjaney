@@ -1,0 +1,19 @@
+name: Build PSP PRX
+on:
+  workflow_dispatch:
+  push:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build with pspdev Docker image
+        run: |
+          docker run --rm -v "$PWD":/src -w /src pspdev/pspdev:latest make
+      - name: List output
+        run: ls -la *.prx *.elf || true
+      - uses: actions/upload-artifact@v4
+        with:
+          name: SpideyTentacles-prx
+          path: SpideyTentacles.prx
+          if-no-files-found: error
